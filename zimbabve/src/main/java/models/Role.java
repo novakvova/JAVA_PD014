@@ -2,6 +2,8 @@ package models;
 
 import lombok.Data;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,4 +16,10 @@ public class Role {
     private String name;
     @Column(length = 4000, nullable = true)
     private String description;
+
+    @OneToMany(mappedBy = "role")
+    private List<UserRole> userRoles;
+    public Role() {
+        userRoles=new ArrayList<>();
+    }
 }

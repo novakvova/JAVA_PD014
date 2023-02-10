@@ -15,7 +15,7 @@ public class QuestionItem {
     private String text;
     @Column(name="is_true")
     private boolean isTrue;
-    @ManyToOne
+    @ManyToOne//(cascade = )
     @JoinColumn(name="for_question_id", nullable = false)
     private Question question;
 }
