@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/categories")
 public class HomeController {
     private CategoryRepository categoryRepository;
     @GetMapping
