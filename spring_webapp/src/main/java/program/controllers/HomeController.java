@@ -1,14 +1,21 @@
 package program.controllers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import program.dto.CategoryDTO;
+import program.dto.UploadImageDto;
 import program.dto.categories.CategoryCreateDTO;
 import program.entities.CategoryEntity;
 import program.repositories.CategoryRepository;
+import program.storage.StorageService;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class HomeController {
     private CategoryRepository categoryRepository;
+    private final StorageService storageService;
     @GetMapping
     public ResponseEntity<List<CategoryEntity>> index() {
         var list = categoryRepository.findAll();
@@ -29,5 +37,22 @@ public class HomeController {
         categoryRepository.save(category);
         var list = categoryRepository.findAll();
         return new ResponseEntity<>(category, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/upload")
+    public String upload(@RequestBody UploadImageDto dto) {
+        String fileName = storageService.save(dto.getBase64());
+        return fileName;
+    }
+
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serverfile(@PathVariable String filename) throws Exception {
+        Resource file = storageService.loadAsResource(filename);
+        String urlFileName = URLEncoder.encode("Сало.jpg", StandardCharsets.UTF_8);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=\""+urlFileName+"\"")
+                .body(file);
     }
 }
