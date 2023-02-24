@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ICategoryItem } from "./types";
 
 const callouts = [
   {
@@ -39,29 +40,34 @@ const callouts = [
 ];
 
 const Home = () => {
+
+  const [list, setList] = useState<Array<ICategoryItem>>([]);
+
   useEffect(() => {
     axios.get("http://localhost:8082/api/categories").then((resp) => {
       console.log("resp = ", resp);
+      setList(resp.data);
     });
   }, []);
+  console.log("List ", list);
 
-  const content = callouts.map((callout) => (
-    <div key={callout.name} className="group relative">
+  const content = list.map((category) => (
+    <div key={category.id} className="group relative">
       <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
         <img
-          src={callout.imageSrc}
-          alt={callout.imageAlt}
+          src={"http://localhost:8082/files/"+category.image}
+          alt={category.name}
           className="h-full w-full object-cover object-center"
         />
       </div>
       <h3 className="mt-6 text-sm text-gray-500">
-        <a href={callout.href}>
+        <a href="#">
           <span className="absolute inset-0" />
-          {callout.name}
+          {category.name}
         </a>
       </h3>
       <p className="text-base font-semibold text-gray-900">
-        {callout.description}
+        {category.description}
       </p>
     </div>
   ));
