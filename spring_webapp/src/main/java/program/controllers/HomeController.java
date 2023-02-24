@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import program.dto.CategoryDTO;
 import program.dto.UploadImageDto;
 import program.dto.categories.CategoryCreateDTO;
 import program.entities.CategoryEntity;
@@ -16,7 +15,6 @@ import program.storage.StorageService;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
