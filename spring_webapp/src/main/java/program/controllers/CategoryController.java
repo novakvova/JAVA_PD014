@@ -28,12 +28,13 @@ public class CategoryController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<CategoryEntity> create(CategoryCreateDTO model) {
+    public ResponseEntity<CategoryItemDTO> create(@RequestBody CategoryCreateDTO model) {
         var fileName = storageService.save(model.getBase64());
         var category = categoryMapper.categoryCreateToCategory(model);
         category.setImage(fileName);
         categoryRepository.save(category);
-        return new ResponseEntity<>(category, HttpStatus.OK);
+        var result = categoryMapper.categoryToCategoryItem(category);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @GetMapping("{id}")
     public ResponseEntity<CategoryEntity> getCagegoryById(@PathVariable("id") int categoryId) {

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { ICategoryItem } from "./types";
 
 const callouts = [
@@ -40,7 +41,6 @@ const callouts = [
 ];
 
 const Home = () => {
-
   const [list, setList] = useState<Array<ICategoryItem>>([]);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const Home = () => {
     <div key={category.id} className="group relative">
       <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
         <img
-          src={"http://localhost:8082/files/"+category.image}
+          src={"http://localhost:8082/files/" + category.image}
           alt={category.name}
           className="h-full w-full object-cover object-center"
         />
@@ -77,12 +77,24 @@ const Home = () => {
       <div className="bg-gray-100">
         <div className="mx-auto max-w-7xl px-2 sm:px-4 md:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
-            <h2 className="text-2xl font-bold text-gray-900">Списко категорій</h2>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Списко категорій
+            </h2>
+            <div className="mt-2">
+            <Link
+              to="/categories/create"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            >
+              Додати категорію
+            </Link>
+            </div>
 
-            <div className="mt-6 space-y-12 
+            <div
+              className="mt-6 space-y-12 
                 sm:grid sm:grid-cols-2 sm:gap-x-2 sm:space-y-0 
                 md:grid md:grid-cols-3 md:gap-x-4 md:space-y-0 
-                lg:grid lg:grid-cols-4 lg:gap-x-6 lg:space-y-0">
+                lg:grid lg:grid-cols-4 lg:gap-x-6 lg:space-y-0"
+            >
               {content}
             </div>
           </div>
