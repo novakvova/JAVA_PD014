@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { APP_ENV } from "../../../env";
 import { ICategoryItem } from "../../home/types";
 import { ICategoryCreate } from "../types";
 
@@ -37,7 +38,7 @@ const CategoryCreatePage = () => {
         e.preventDefault();
         try {
             // console.log("Send Server form", model);
-            const result = await axios.post<ICategoryItem>("http://localhost:8082/api/categories", model);
+            const result = await axios.post<ICategoryItem>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`, model);
             console.log("Result ", result);
             navigator("/");
 

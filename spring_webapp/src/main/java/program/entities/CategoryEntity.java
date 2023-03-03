@@ -3,6 +3,8 @@ package program.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,4 +21,6 @@ public class CategoryEntity {
     private String image;
     @Column(length = 4000)
     private String description;
+    @OneToMany(mappedBy = "category")
+    private List<ProductEntity> products;
 }
