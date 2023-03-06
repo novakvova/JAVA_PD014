@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryItemDTO create(CategoryCreateDTO model) {
-        var fileName = storageService.save(model.getBase64());
+        var fileName = storageService.saveMultipartFile(model.getFile()); //storageService.save(model.getBase64());
         var category = categoryMapper.categoryCreateToCategory(model);
         category.setImage(fileName);
         categoryRepository.save(category);

@@ -2,6 +2,7 @@ package program.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import program.dto.categories.CategoryCreateDTO;
@@ -22,8 +23,8 @@ public class CategoryController {
     public ResponseEntity<List<CategoryItemDTO>> index() {
         return new ResponseEntity<>(categoryService.get(), HttpStatus.OK);
     }
-    @PostMapping
-    public ResponseEntity<CategoryItemDTO> create(@RequestBody CategoryCreateDTO model) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CategoryItemDTO> create(@ModelAttribute CategoryCreateDTO model) {
         var result = categoryService.create(model);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

@@ -12,7 +12,7 @@ const CategoryCreatePage = () => {
     const [model, setModel] = useState<ICategoryCreate>({
         name: "",
         description: "",
-        base64: ""
+        file: null
     });
 
     const onChangeHandler= (e: ChangeEvent<HTMLInputElement>| ChangeEvent<HTMLTextAreaElement>) => {
@@ -24,12 +24,13 @@ const CategoryCreatePage = () => {
         const {files} = target;
         if(files) {
             const file = files[0];
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload=(data) => {
-                const result = data.target?.result as string;
-                setModel({...model, base64: result});
-            }
+            setModel({...model, file});
+            // const fileReader = new FileReader();
+            // fileReader.readAsDataURL(file);
+            // fileReader.onload=(data) => {
+            //     const result = data.target?.result as string;
+            //     setModel({...model, base64: result});
+            // }
         }
         target.value="";
     }
@@ -38,7 +39,11 @@ const CategoryCreatePage = () => {
         e.preventDefault();
         try {
             // console.log("Send Server form", model);
-            const result = await axios.post<ICategoryItem>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`, model);
+            const result = await axios.post<ICategoryItem>(
+              `${APP_ENV.REMOTE_HOST_NAME}api/categories`, model,
+              {
+                headers: {"Content-Type": "multipart/form-data"}
+              });
             console.log("Result ", result);
             navigator("/");
 
@@ -96,7 +101,7 @@ const CategoryCreatePage = () => {
                   htmlFor="selectImage"
                   className="inline-block w-20 overflow-hidden bg-gray-100"
                 >
-                  { model.base64 === "" ? (
+                  { model.file === null ? (
                     <svg
                       className="h-full w-full text-gray-300"
                       fill="currentColor"
@@ -105,7 +110,7 @@ const CategoryCreatePage = () => {
                       <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                   ) : (
-                    <img src={model.base64} />
+                    <img src={URL.createObjectURL(model.file)} />
                   )
                   }
                 </label>
