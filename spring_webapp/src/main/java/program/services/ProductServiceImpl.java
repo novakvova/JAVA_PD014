@@ -12,7 +12,9 @@ import program.repositories.ProductImageRepository;
 import program.repositories.ProductRepository;
 import program.storage.StorageService;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -45,5 +47,29 @@ public class ProductServiceImpl implements ProductService {
             priority++;
         }
         return null;
+    }
+
+    @Override
+    public List<ProductItemDTO> get() {
+        var list = new ArrayList<ProductItemDTO>();
+        var data = productRepository.findAll();
+        for(var product : data) {
+            ProductItemDTO productItemDTO = new ProductItemDTO();
+
+            productItemDTO.setCategory( product.getCategory().getName() );
+            productItemDTO.setId( product.getId() );
+            productItemDTO.setName( product.getName() );
+            productItemDTO.setPrice( product.getPrice() );
+            productItemDTO.setDescription( product.getDescription() );
+
+            var items = new ArrayList<String>();
+            for (var img : product.getProductImages())
+            {
+                items.add(img.getName());
+            }
+            productItemDTO.setFiles(items);
+            list.add(productItemDTO);
+        }
+        return list;
     }
 }

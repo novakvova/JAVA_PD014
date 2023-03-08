@@ -6,6 +6,7 @@ import DefaultLayout from './components/containers/default';
 import Home from './components/home';
 import LoginPage from './components/auth/login';
 import CategoryCreatePage from './components/categories/create';
+import ProductCreatePage from './components/products/create';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/" element={<DefaultLayout />}>
           <Route index element={<Home />} />
           <Route path="categories/create" element={<CategoryCreatePage />} />
+          <Route path="products/create" element={<ProductCreatePage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
       </Routes>

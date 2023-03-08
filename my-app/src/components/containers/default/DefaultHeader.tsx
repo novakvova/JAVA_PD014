@@ -88,14 +88,14 @@ const DefaultHeader = () => {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
             <div className="flex justify-start lg:w-0 lg:flex-1">
-              <a href="#">
+              <Link to="/">
                 <span className="sr-only">Your Company</span>
                 <img
                   className="h-8 w-auto sm:h-10"
                   src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                   alt=""
                 />
-              </a>
+              </Link>
             </div>
             <div className="-my-2 -mr-2 md:hidden">
               <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
@@ -169,9 +169,9 @@ const DefaultHeader = () => {
                 )}
               </Popover>
   
-              <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
-                Pricing
-              </a>
+              <Link to="/products/create" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                Додати товар
+              </Link>
               <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
                 Docs
               </a>
