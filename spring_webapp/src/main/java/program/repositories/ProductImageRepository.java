@@ -7,4 +7,5 @@ import program.entities.ProductImageEntity;
 
 @Repository
 public interface ProductImageRepository extends JpaRepository<ProductImageEntity, Integer> {
+    ProductImageEntity findByName(String name);
 }
