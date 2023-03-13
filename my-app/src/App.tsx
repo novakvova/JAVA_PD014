@@ -7,6 +7,7 @@ import Home from './components/home';
 import LoginPage from './components/auth/login';
 import CategoryCreatePage from './components/categories/create';
 import ProductCreatePage from './components/products/create';
+import ProductListPage from './components/products/list';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="categories/create" element={<CategoryCreatePage />} />
           <Route path="products/create" element={<ProductCreatePage />} />
+          <Route path="products/list" element={<ProductListPage />} />
           <Route path="login" element={<LoginPage />} />
         </Route>
       </Routes>

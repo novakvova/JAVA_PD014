@@ -1,7 +1,8 @@
 import axios from "axios";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_ENV } from "../../../env";
+import { ICategoryItem } from "../../home/types";
 import { IPorductCreate, IProductItem } from "../types";
 
 const ProductCreatePage = () => {
@@ -14,10 +15,28 @@ const ProductCreatePage = () => {
         price: 0,
         category_id: 1
     });
+    
+    const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
+
+    useEffect(() => {
+      axios
+        .get<Array<ICategoryItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`)
+        .then((resp) => {
+          console.log("resp = ", resp);
+          setCategories(resp.data);
+        });
+    }, []);
+
+    const content = categories.map((category) => (
+      <option key={category.id} value={category.id}>{category.name}</option>
+    ));
 
     const onChangeHandler= (e: ChangeEvent<HTMLInputElement>| ChangeEvent<HTMLTextAreaElement>) => {
         setModel({...model, [e.target.name]: e.target.value});
     } 
+    const onChangeSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+      setModel({ ...model, [e.target.name]: e.target.value });
+    };
 
     const onFileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const {target} = e;
@@ -89,21 +108,21 @@ const ProductCreatePage = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="category_id"
-                className="text-sm text-gray-700 block mb-1 font-medium"
-              >
-                Кагорія
-              </label>
-              <input
-                type="text"
-                name="category_id"
-                value={model.category_id}
-                onChange={onChangeHandler}
-                id="category_id"
-                className="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full"
-                placeholder="Вкажіть id категорії"
-              />
+            <label
+              htmlFor="countries"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Оберіть категорію
+            </label>
+            <select
+              onChange={onChangeSelectHandler}
+              id="category_id"
+              name="category_id"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option selected>Виберіть категорію</option>
+              {content}
+            </select>
             </div>
 
             <div>
