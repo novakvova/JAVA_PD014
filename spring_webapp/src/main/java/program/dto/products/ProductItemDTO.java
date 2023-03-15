@@ -1,7 +1,9 @@
 package program.dto.products;
 
 import lombok.Data;
+import org.hibernate.collection.spi.PersistentBag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,5 +13,6 @@ public class ProductItemDTO {
     private double price;
     private String description;
     private String category;
-    private List<String> files;
+    private int category_id;
+    private List<String> files = new ArrayList<>();
 }

@@ -11,6 +11,16 @@ export interface IProductItem {
     name: string,
     description: string,
     price: number,
-    category: string
+    category: string,
+    category_id: string,
     files: Array<string>,
+}
+
+export interface IPorductEdit {
+    name: string,
+    price: number,
+    description: string,
+    category_id: string,
+    files: Array<File>,
+    removeFiles: string[]
 }
