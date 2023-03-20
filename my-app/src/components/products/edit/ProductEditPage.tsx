@@ -1,14 +1,14 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { APP_ENV } from "../../../env";
 import { ICategoryItem } from "../../home/types";
 import { IPorductEdit, IProductItem } from "../types";
 
 const ProductEditPage = () => {
   const navigator = useNavigate();
-  const {id} = useParams();
+  const { id } = useParams();
   console.log("id", id);
 
   const [model, setModel] = useState<IPorductEdit>({
@@ -17,7 +17,7 @@ const ProductEditPage = () => {
     price: 0,
     description: "",
     files: [],
-    removeFiles: []
+    removeFiles: [],
   });
 
   const [oldImages, setOldImages] = useState<string[]>([]);
@@ -32,20 +32,20 @@ const ProductEditPage = () => {
         setCategories(resp.data);
       });
 
-      axios
+    axios
       .get<IProductItem>(`${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`)
       .then((resp) => {
-        const {files, name, price, category_id, description} = resp.data;
+        const { files, name, price, category_id, description } = resp.data;
         setOldImages(files);
-        setModel({...model, name, price, description, category_id});
+        setModel({ ...model, name, price, description, category_id });
         console.log("data", resp.data);
-        
       });
-    
   }, []);
 
   const content = categories.map((category) => (
-    <option key={category.id} value={category.id}>{category.name}</option>
+    <option key={category.id} value={category.id}>
+      {category.name}
+    </option>
   ));
 
   const onChangeHandler = (
@@ -84,34 +84,57 @@ const ProductEditPage = () => {
   };
 
   const filesContent = model.files.map((f, index) => (
-    <img key={index} src={URL.createObjectURL(f)} />
-  ));
-
-  const DeleteProductOldImagesHandler = (imageSrc: string) => {
-    setModel({...model, removeFiles: [...model.removeFiles, imageSrc]});
-    setOldImages(oldImages.filter(x=>x!==imageSrc));
-  };
-
-  const DataProductsOld = oldImages.map((product, index) => (
-    <div key={index} className="inline  m-2 ">
-      <div
-        style={{ cursor: "pointer" }}
-        className="flex justify-center ... border-2 border-black  rounded-lg ... "
+<div key={index} className="mb-4">
+      <Link
+        to="#"
         onClick={(e) => {
-          DeleteProductOldImagesHandler(product);
+          e.preventDefault();
+          setModel({ ...model, files: model.files.filter((x) => x !== f) });
+          console.log("click delete", f);
         }}
       >
         <FaTrash className="m-2 " />
+      </Link>
+      <div className="relative">
+        <div style={{ height: "150px" }}>
+          <div className="picture-main">
+            <img
+              src={URL.createObjectURL(f)}
+              className="picture-container"
+              alt=""
+            />
+          </div>
+        </div>
       </div>
-      <div className="p-2">
-        <img
-          className=" w-20 h-20 "
-          src={`${APP_ENV.REMOTE_HOST_NAME}files/600_${product}`}
-        ></img>
+    </div>
+
+  ));
+
+  const DataProductsOld = oldImages.map((product, index) => (
+    <div key={index} className="mb-4">
+      <Link
+        to="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setModel({ ...model, removeFiles: [...model.removeFiles, product] });
+          setOldImages(oldImages.filter((x) => x !== product));
+        }}
+      >
+        <FaTrash className="m-2 " />
+      </Link>
+      <div className="relative">
+        <div style={{ height: "150px" }}>
+          <div className="picture-main">
+            <img
+              src={`${APP_ENV.REMOTE_HOST_NAME}files/300_${product}`}
+              className="picture-container"
+              alt=""
+            />
+          </div>
+        </div>
       </div>
     </div>
   ));
-
 
   return (
     <div className="mx-auto max-w-7xl px-6">
@@ -197,12 +220,7 @@ const ProductEditPage = () => {
             </label>
 
             <div className="mt-1 flex items-center">
-              <label
-                htmlFor="selectImage"
-                className="inline-block w-20 overflow-hidden bg-gray-100"
-              >
-                {filesContent}
-              </label>
+
               <label
                 htmlFor="selectImage"
                 className="ml-5 rounded-md border border-gray-300 bg-white 
@@ -214,10 +232,9 @@ const ProductEditPage = () => {
               </label>
             </div>
 
-            <div className="mt-1 flex items-center">
-              <label className="flex ">
-                <>{DataProductsOld}</>
-              </label>
+            <div className="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 items-center gap-4">
+              {DataProductsOld}
+              {filesContent}
             </div>
             <input
               type="file"

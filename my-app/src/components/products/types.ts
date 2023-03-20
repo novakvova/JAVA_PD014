@@ -7,7 +7,7 @@ export interface IPorductCreate {
 }
 
 export interface IProductItem {
-    id: number,
+    id: number|string|undefined,
     name: string,
     description: string,
     price: number,

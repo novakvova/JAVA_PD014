@@ -9,6 +9,7 @@ import CategoryCreatePage from './components/categories/create';
 import ProductCreatePage from './components/products/create';
 import ProductListPage from './components/products/list';
 import ProductEditPage from './components/products/edit';
+import ProductItemPage from './components/products/item/ProductItemPage';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="products/create" element={<ProductCreatePage />} />
           <Route path="products/list" element={<ProductListPage />} />
           <Route path="products/edit/:id" element={<ProductEditPage/> }/>
+          <Route path="products/view/:id" element={<ProductItemPage/> }/>
           <Route path="login" element={<LoginPage />} />
         </Route>
       </Routes>

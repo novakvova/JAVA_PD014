@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
+import { FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { APP_ENV } from "../../../env";
 import { ICategoryItem } from "../../home/types";
@@ -63,11 +64,34 @@ const ProductCreatePage = () => {
     }
 
     const filesContent = model.files.map((f, index)=> (
-        <img key={index} src={URL.createObjectURL(f)} />
+      <div key={index} className="mb-4">
+      <Link
+        to="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setModel({ ...model, files: model.files.filter((x) => x !== f) });
+          console.log("click delete", f);
+        }}
+      >
+        <FaTrash className="m-2 " />
+      </Link>
+      <div className="relative">
+        <div style={{ height: "150px" }}>
+          <div className="picture-main">
+            <img
+              src={URL.createObjectURL(f)}
+              className="picture-container"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
     ));
 
     return (
-      <div className="p-8 rounded border border-gray-200">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
         <h1 className="font-medium text-3xl">Додати товар</h1>
         <form onSubmit={onSubmitHandler}>
           <div className="mt-8 grid lg:grid-cols-1 gap-4">
@@ -144,18 +168,18 @@ const ProductCreatePage = () => {
             </div>
 
             <div>
+
+            <div className="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 items-center gap-4">
+              {filesContent}
+            </div>
               <label className="block text-sm font-medium text-gray-700">
                 Фото
               </label>
 
-              <div className="mt-1 flex items-center">
-                <label
-                  htmlFor="selectImage"
-                  className="inline-block w-20 overflow-hidden bg-gray-100"
-                >
-                  {filesContent}
 
-                </label>
+
+
+              <div className="mt-1 flex items-center">
                 <label
                   htmlFor="selectImage"
                   className="ml-5 rounded-md border border-gray-300 bg-white 
