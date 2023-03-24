@@ -1,5 +1,10 @@
 package program.configuration.security;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import program.entities.UserEntity;
 import program.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,17 +17,39 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import program.repositories.UserRoleRepository;
+
+import java.util.Collection;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
     private final UserRepository repository;
+    private final UserRoleRepository userRoleRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var userDetailService = new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                var userEntity = repository.findByEmail(username).orElseThrow(()
+                        -> new UsernameNotFoundException("User not found"));
+                //Інформація про користувача і список його ролей
+                var roles = getRoles(userEntity);
+                var userDetails = new User(userEntity.getEmail(), userEntity.getPassword(), roles);
+                return userDetails; // якщо є, то створюється новий юзер на основі того, що в БД
+            }
+            private Collection<? extends GrantedAuthority> getRoles(UserEntity userEntity) {
+                var roles = userRoleRepository.findByUser(userEntity);
+                String [] userRoles = roles.stream()                                      //витягується списочок ролей, які є у юзера
+                        .map((role) -> role.getRole().getName()).toArray(String []:: new);
+                Collection<GrantedAuthority> authorityCollections =                               //створюється нова колекція authorityCollections
+                        AuthorityUtils.createAuthorityList(userRoles);
+                return authorityCollections;
+            }
+        };
+        return userDetailService;
     }
 
     @Bean

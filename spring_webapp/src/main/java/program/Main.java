@@ -23,7 +23,7 @@ public class Main {
           try {
               storageService.init();
               seedService.seedRoleData();
-
+              seedService.seedUserData();
           } catch(Exception ex) {
               System.out.println("---Хюсто у нас проблеми---"+ ex.getMessage());
           }

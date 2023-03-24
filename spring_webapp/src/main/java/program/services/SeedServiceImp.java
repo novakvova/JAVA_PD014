@@ -1,16 +1,24 @@
 package program.services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import program.constants.Roles;
 import program.entities.RoleEntity;
+import program.entities.UserEntity;
+import program.entities.UserRoleEntity;
 import program.iterfaces.SeedService;
 import program.repositories.RoleRepository;
+import program.repositories.UserRepository;
+import program.repositories.UserRoleRepository;
 
 @Service
 @AllArgsConstructor
 public class SeedServiceImp implements SeedService {
     RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final PasswordEncoder passwordEncoder;
     @Override
     public void seedRoleData() {
         if (roleRepository.count() == 0) {
@@ -28,6 +36,21 @@ public class SeedServiceImp implements SeedService {
 
     @Override
     public void seedUserData() {
-
+        if (userRepository.count() == 0) {
+            var user = UserEntity.builder()
+                    .firstName("Петро")
+                    .lastName("Підкаблучник")
+                    .email("admin@gmail.com")
+                    .phone("093 839 43 23")
+                    .password(passwordEncoder.encode("123456"))
+                    .build();
+            userRepository.save(user);
+            var role = roleRepository.findByName(Roles.Admin);
+            var ur = new UserRoleEntity().builder()
+                    .user(user)
+                    .role(role)
+                    .build();
+            userRoleRepository.save(ur);
+        }
     }
 }
