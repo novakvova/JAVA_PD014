@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import jwtDecode from 'jwt-decode';
 import { AuthUserActionType, IUser } from './components/auth/types';
-import axios from 'axios';
+import http from './http_common';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -21,7 +21,7 @@ if(localStorage.token) {
     type: AuthUserActionType.LOGIN_USER,
     payload: {email: user.email, image: user.image, phone: user.phone} as IUser
   });
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
 root.render(
