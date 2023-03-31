@@ -1,8 +1,7 @@
-import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { APP_ENV } from "../../../env";
+import http from "../../../http_common";
 import { ICategoryItem } from "../../home/types";
 import { IPorductCreate, IProductItem } from "../types";
 
@@ -20,8 +19,8 @@ const ProductCreatePage = () => {
     const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
 
     useEffect(() => {
-      axios
-        .get<Array<ICategoryItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`)
+      http
+        .get<Array<ICategoryItem>>(`api/categories`)
         .then((resp) => {
           console.log("resp = ", resp);
           setCategories(resp.data);
@@ -52,8 +51,8 @@ const ProductCreatePage = () => {
         e.preventDefault();
         try {
             // console.log("Send Server form", model);
-            const result = await axios.post<IProductItem>(
-              `${APP_ENV.REMOTE_HOST_NAME}api/products`, model,
+            const result = await http.post<IProductItem>(
+              `api/products`, model,
               {
                 headers: {"Content-Type": "multipart/form-data"}
               });

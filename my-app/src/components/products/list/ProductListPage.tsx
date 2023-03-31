@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { APP_ENV } from "../../../env";
+import http from "../../../http_common";
 import ModalDelete from "../../common/modal/delete";
 import { IProductItem } from "../types";
 
@@ -9,8 +9,8 @@ const ProductListPage = () => {
   const [list, setList] = useState<Array<IProductItem>>([]);
 
   useEffect(() => {
-    axios
-      .get<Array<IProductItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/products`)
+    http
+      .get<Array<IProductItem>>(`api/products`)
       .then((resp) => {
         console.log("resp = ", resp);
         setList(resp.data);
@@ -19,8 +19,8 @@ const ProductListPage = () => {
   console.log("List data: ", list);
 
   const DeleteProductHandler = (id: number | string | undefined) => {
-    axios
-      .delete(`${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`)
+    http
+      .delete(`api/products/${id}`)
       .then((resp) => {
         setList(list.filter((x) => x.id !== id));
       });

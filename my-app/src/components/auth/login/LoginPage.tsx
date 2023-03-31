@@ -10,6 +10,7 @@ import { APP_ENV } from "../../../env";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useDispatch } from "react-redux";
+import http from "../../../http_common";
 
 const LoginPage = () => {
 
@@ -35,7 +36,7 @@ const LoginPage = () => {
         return;
 
       values.reCaptchaToken=await executeRecaptcha();  
-      const resp = await axios.post<IAuthResponse>(`${APP_ENV.REMOTE_HOST_NAME}account/login`,values);
+      const resp = await http.post<IAuthResponse>(`account/login`,values);
       const {token} = resp.data;
       const user = jwtDecode(token) as IUser;
       
@@ -44,7 +45,7 @@ const LoginPage = () => {
         payload: user 
       });
 
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       localStorage.token = token;
       navigator("/");
       //console.log("Login user token ", resp);

@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { APP_ENV } from "../../env";
+import http from "../../http_common";
 import { ICategoryItem } from "./types";
 
 
@@ -9,7 +9,7 @@ const Home = () => {
   const [list, setList] = useState<Array<ICategoryItem>>([]);
 
   useEffect(() => {
-    axios.get(`${APP_ENV.REMOTE_HOST_NAME}api/categories`).then((resp) => {
+    http.get(`api/categories`).then((resp) => {
       console.log("resp = ", resp);
       setList(resp.data);
     });

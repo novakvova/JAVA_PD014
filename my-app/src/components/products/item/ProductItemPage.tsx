@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { APP_ENV } from "../../../env";
+import http from "../../../http_common";
 import { IProductItem } from "../types";
 
 const ProductItemPage = () => {
@@ -17,7 +17,7 @@ const ProductItemPage = () => {
   });
 
   useEffect(() => {
-    axios
+    http
       .get<IProductItem>(`${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`)
       .then((resp) => {
         setModel(resp.data);
