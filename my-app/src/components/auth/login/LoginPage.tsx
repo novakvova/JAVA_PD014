@@ -1,13 +1,15 @@
 import { FcGoogle } from "react-icons/fc";
 
 import loginImg from "../../../assets/login.jpg";
-import { Link } from "react-router-dom";
-import { ILoginPage } from "../types";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthUserActionType, IAuthResponse, ILoginPage, IUser } from "../types";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { APP_ENV } from "../../../env";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
+import { useDispatch } from "react-redux";
 
 const LoginPage = () => {
 
@@ -24,14 +26,28 @@ const LoginPage = () => {
     password: yup.string().required("Поле не повинне бути пустим"),
   });
 
+  const dispatch = useDispatch();
+  const navigator = useNavigate();
+
   const onSubmitFormik = async (values: ILoginPage) => {
     try {
       if(!executeRecaptcha)
         return;
 
       values.reCaptchaToken=await executeRecaptcha();  
-      const data = await axios.post(`${APP_ENV.REMOTE_HOST_NAME}account/login`,values);
-      console.log("Login user token ", data);
+      const resp = await axios.post<IAuthResponse>(`${APP_ENV.REMOTE_HOST_NAME}account/login`,values);
+      const {token} = resp.data;
+      const user = jwtDecode(token) as IUser;
+      
+      dispatch({
+        type: AuthUserActionType.LOGIN_USER,
+        payload: user 
+      });
+
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      localStorage.token = token;
+      navigator("/");
+      //console.log("Login user token ", resp);
     }
     catch(error: any) {
       console.log("Error login user", error);
