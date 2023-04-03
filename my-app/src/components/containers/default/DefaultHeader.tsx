@@ -15,10 +15,11 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { AuthUserActionType, IAuthUser } from '../../auth/types'
 import { useDispatch } from 'react-redux'
+import setAuthToken from '../../../helpers/setAuthToken'
 
 const solutions = [
   {
@@ -86,6 +87,8 @@ function classNames(...classes: any) {
 }
 
 const DefaultHeader = () => {
+
+  const navigate = useNavigate();
   
   const { isAuth, user } = useSelector((store: any) => store.auth as IAuthUser);
   const dispatch = useDispatch();
@@ -99,10 +102,11 @@ const DefaultHeader = () => {
 
   const LogoutUser= (e: any) => {
     e.preventDefault();
-    localStorage.removeItem("token");
+    setAuthToken("");
     dispatch({
       type: AuthUserActionType.LOGOUT_USER
     });
+    navigate("/");
   }
 
     return (

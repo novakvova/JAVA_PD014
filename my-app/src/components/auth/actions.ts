@@ -26,5 +26,4 @@ export const AuthUserToken = (token: string, dispatch: Dispatch<any>) => {
         payload: {email: user.email, image: user.image, phone: user.phone, roles: user.roles} as IUser
       });
       setAuthToken(token);
-      localStorage.token = token;
 }

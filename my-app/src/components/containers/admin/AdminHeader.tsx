@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { AuthUserActionType, IAuthUser } from '../../auth/types'
 import { useDispatch } from 'react-redux'
@@ -14,7 +14,8 @@ function classNames(...classes: any) {
 }
 
 const AdminHeader = () => {
-  
+  const navigate = useNavigate();
+
   const { isAuth, user } = useSelector((store: any) => store.auth as IAuthUser);
   const dispatch = useDispatch();
 
@@ -24,6 +25,7 @@ const AdminHeader = () => {
     dispatch({
       type: AuthUserActionType.LOGOUT_USER
     });
+    navigate("/");
   }
 
     return (
