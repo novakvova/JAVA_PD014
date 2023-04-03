@@ -13,10 +13,12 @@ import AdminProductCreatePage from './components/admin/products/create';
 import AdminProductListPage from './components/admin/products/list';
 import AdminProductEditPage from './components/admin/products/edit';
 import AdminHome from './components/admin/categories/list';
+import Loader from './components/common/Loader/Loader';
 
 const App = () => {
   return (
     <>
+      <Loader />
       <Routes>
         <Route path="/" element={<DefaultLayout />}>
           <Route index element={<Home />} />
