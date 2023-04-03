@@ -2,12 +2,12 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { APP_ENV } from "../../../env";
-import http from "../../../http_common";
-import { ICategoryItem } from "../../home/types";
+import { APP_ENV } from "../../../../env";
+import http from "../../../../http_common";
+import { ICategoryItem } from "../../../home/types";
 import { IPorductEdit, IProductItem } from "../types";
 
-const ProductEditPage = () => {
+const AdminProductEditPage = () => {
   const navigator = useNavigate();
   const { id } = useParams();
   console.log("id", id);
@@ -261,4 +261,4 @@ const ProductEditPage = () => {
   );
 };
 
-export default ProductEditPage;
+export default AdminProductEditPage;

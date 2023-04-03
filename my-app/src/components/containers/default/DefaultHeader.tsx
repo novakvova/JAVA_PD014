@@ -90,6 +90,13 @@ const DefaultHeader = () => {
   const { isAuth, user } = useSelector((store: any) => store.auth as IAuthUser);
   const dispatch = useDispatch();
 
+  let isAdmin = false;
+  if(isAuth&&user) {
+    for(let i=0;i<user?.roles.length;i++)
+      if(user?.roles[i]==="admin")
+        isAdmin=true;
+  }
+
   const LogoutUser= (e: any) => {
     e.preventDefault();
     localStorage.removeItem("token");
@@ -187,9 +194,14 @@ const DefaultHeader = () => {
               <Link to="/products/list" className="text-base font-medium text-gray-500 hover:text-gray-900">
                 Товари
               </Link>
-              <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
-                Docs
-              </a>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Адмін панель
+                </Link>
+              )}
   
               <Popover className="relative">
                 {({ open }) => (

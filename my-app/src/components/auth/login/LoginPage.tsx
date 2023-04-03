@@ -11,10 +11,14 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useDispatch } from "react-redux";
 import http from "../../../http_common";
+import { LoginUser } from "../actions";
+import { useState } from "react";
 
 const LoginPage = () => {
 
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const [error, setError] = useState<string>("");
 
   const initValues: ILoginPage = {
     email: "",
@@ -36,24 +40,14 @@ const LoginPage = () => {
         return;
 
       values.reCaptchaToken=await executeRecaptcha();  
-      const resp = await http.post<IAuthResponse>(`account/login`,values);
-      const {token} = resp.data;
-      const user = jwtDecode(token) as IUser;
       
-      dispatch({
-        type: AuthUserActionType.LOGIN_USER,
-        payload: user 
-      });
-
-      http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      localStorage.token = token;
+      await LoginUser(values, dispatch);
       navigator("/");
-      //console.log("Login user token ", resp);
     }
     catch(error: any) {
+      setError("Не вірно вказано дані");
       console.log("Error login user", error);
     }
-    console.log("Login form: ", values);
   };
 
   const formik = useFormik({
@@ -114,6 +108,11 @@ const LoginPage = () => {
                 </p>
               )}
             </div>
+            {error && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                  <span className="font-medium">{error}</span>
+                </p>
+              )}
             <button className="w-full py-3 mt-8 bg-indigo-600 hover:bg-indigo-500 relative text-white">
               Sign In
             </button>

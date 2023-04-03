@@ -6,22 +6,14 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import jwtDecode from 'jwt-decode';
-import { AuthUserActionType, IUser } from './components/auth/types';
-import http from './http_common';
+import { AuthUserToken } from './components/auth/actions';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 if(localStorage.token) {
-  const {token} = localStorage; 
-  const user = jwtDecode(token) as IUser;
-  store.dispatch({
-    type: AuthUserActionType.LOGIN_USER,
-    payload: {email: user.email, image: user.image, phone: user.phone} as IUser
-  });
-  http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  AuthUserToken(localStorage.token, store.dispatch);
 }
 
 root.render(

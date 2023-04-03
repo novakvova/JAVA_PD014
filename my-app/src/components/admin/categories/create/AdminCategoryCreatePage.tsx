@@ -1,48 +1,35 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import { FaTrash } from "react-icons/fa";
+import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import http from "../../../http_common";
-import { ICategoryItem } from "../../home/types";
-import { IPorductCreate, IProductItem } from "../types";
+import http from "../../../../http_common";
+import { ICategoryItem } from "../../../home/types";
+import { ICategoryCreate } from "../types";
 
-const ProductCreatePage = () => {
+const AdminCategoryCreatePage = () => {
+
     const navigator = useNavigate();
     
-    const [model, setModel] = useState<IPorductCreate>({
+    const [model, setModel] = useState<ICategoryCreate>({
         name: "",
         description: "",
-        files:[],
-        price: 0,
-        category_id: 1
+        file: null
     });
-    
-    const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
-
-    useEffect(() => {
-      http
-        .get<Array<ICategoryItem>>(`api/categories`)
-        .then((resp) => {
-          console.log("resp = ", resp);
-          setCategories(resp.data);
-        });
-    }, []);
-
-    const content = categories.map((category) => (
-      <option key={category.id} value={category.id}>{category.name}</option>
-    ));
 
     const onChangeHandler= (e: ChangeEvent<HTMLInputElement>| ChangeEvent<HTMLTextAreaElement>) => {
         setModel({...model, [e.target.name]: e.target.value});
     } 
-    const onChangeSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-      setModel({ ...model, [e.target.name]: e.target.value });
-    };
 
     const onFileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const {target} = e;
-        if(target.files) {
-            const file = target.files[0];
-            setModel({...model, files: [...model.files, file]});
+        const {files} = target;
+        if(files) {
+            const file = files[0];
+            setModel({...model, file});
+            // const fileReader = new FileReader();
+            // fileReader.readAsDataURL(file);
+            // fileReader.onload=(data) => {
+            //     const result = data.target?.result as string;
+            //     setModel({...model, base64: result});
+            // }
         }
         target.value="";
     }
@@ -51,47 +38,20 @@ const ProductCreatePage = () => {
         e.preventDefault();
         try {
             // console.log("Send Server form", model);
-            const result = await http.post<IProductItem>(
-              `api/products`, model,
+            const result = await http.post<ICategoryItem>(
+              `api/categories`, model,
               {
                 headers: {"Content-Type": "multipart/form-data"}
               });
             console.log("Result ", result);
-            navigator("/");
+            navigator("/admin");
 
         }catch(error: any) { }
     }
 
-    const filesContent = model.files.map((f, index)=> (
-      <div key={index} className="mb-4">
-      <Link
-        to="#"
-        onClick={(e) => {
-          e.preventDefault();
-          setModel({ ...model, files: model.files.filter((x) => x !== f) });
-          console.log("click delete", f);
-        }}
-      >
-        <FaTrash className="m-2 " />
-      </Link>
-      <div className="relative">
-        <div style={{ height: "150px" }}>
-          <div className="picture-main">
-            <img
-              src={URL.createObjectURL(f)}
-              className="picture-container"
-              alt=""
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    ));
-
     return (
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-        <h1 className="font-medium text-3xl">Додати товар</h1>
+      <div className="p-8 rounded border border-gray-200">
+        <h1 className="font-medium text-3xl">Додати категорію</h1>
         <form onSubmit={onSubmitHandler}>
           <div className="mt-8 grid lg:grid-cols-1 gap-4">
             <div>
@@ -114,42 +74,6 @@ const ProductCreatePage = () => {
 
             <div>
               <label
-                htmlFor="price"
-                className="text-sm text-gray-700 block mb-1 font-medium"
-              >
-                Ціна
-              </label>
-              <input
-                type="number"
-                name="price"
-                value={model.price}
-                onChange={onChangeHandler}
-                id="price"
-                className="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full"
-                placeholder="Вкажіть ціну"
-              />
-            </div>
-
-            <div>
-            <label
-              htmlFor="countries"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Оберіть категорію
-            </label>
-            <select
-              onChange={onChangeSelectHandler}
-              id="category_id"
-              name="category_id"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-              <option selected>Виберіть категорію</option>
-              {content}
-            </select>
-            </div>
-
-            <div>
-              <label
                 htmlFor="description"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
@@ -167,18 +91,28 @@ const ProductCreatePage = () => {
             </div>
 
             <div>
-
-            <div className="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 items-center gap-4">
-              {filesContent}
-            </div>
               <label className="block text-sm font-medium text-gray-700">
                 Фото
               </label>
 
-
-
-
               <div className="mt-1 flex items-center">
+                <label
+                  htmlFor="selectImage"
+                  className="inline-block w-20 overflow-hidden bg-gray-100"
+                >
+                  { model.file === null ? (
+                    <svg
+                      className="h-full w-full text-gray-300"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  ) : (
+                    <img src={URL.createObjectURL(model.file)} />
+                  )
+                  }
+                </label>
                 <label
                   htmlFor="selectImage"
                   className="ml-5 rounded-md border border-gray-300 bg-white 
@@ -215,5 +149,4 @@ const ProductCreatePage = () => {
       </div>
     );
 }
-
-export default ProductCreatePage;
+export default AdminCategoryCreatePage;
