@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import http from "../../../http_common";
 import { LoginUser } from "../actions";
 import { useState } from "react";
+import GoogleAuth from "../google/GoogleAuth";
 
 const LoginPage = () => {
 
@@ -125,7 +126,7 @@ const LoginPage = () => {
             </Link>
             <div className="flex justify-between py-8">
               <p className="border shadow-lg hover:shadow-xl px-6 py-2 relative flex items-center">
-                <FcGoogle className="mr-2" /> Google
+                <GoogleAuth/>
               </p>
             </div>
           </form>
